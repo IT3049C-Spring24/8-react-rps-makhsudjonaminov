@@ -1,79 +1,85 @@
-// src/components/GameView.jsx
-import React, { useState } from 'react';
-import RockPaperScissors from './RockPaperScissors'; // Assuming RockPaperScissors is defined in this file or imported from another file
-
-const GameView = ({ userName }) => {
-  // State to manage which view to display
-  const [showGame, setShowGame] = useState(false);
-
-  // State hooks for game state
+import { useState } from "react";
+const GameView = ({userName}) => {
   const [userChoice, setUserChoice] = useState(null);
   const [userScore, setUserScore] = useState(0);
   const [cpuScore, setCpuScore] = useState(0);
   const [gameHistory, setGameHistory] = useState([]);
+  const userChooses = (choice) => {
+    const cpuChoice = generateComputerChoice(); // Kompyuter avtomatik tanlashi
+    const winner = determineWinner(choice, cpuChoice); // G'olibni aniqlash
 
-  // Function to handle user's choice
-  const handleUserChoice = (choice) => {
-    setUserChoice(choice);
-  };
-
-  // Function to handle "Go" click
-  const handleGoClick = () => {
-    // Generate CPU's choice
-    const cpuChoice = RockPaperScissors.generateCPUChoice();
-
-    // Determine winner and update scores
-    const winner = RockPaperScissors.determineWinner(userChoice, cpuChoice);
+    // Natijani saqlash va hisobni yangilash
     if (winner === 'user') {
-      setUserScore(userScore + 1);
+      setUserScore(prevScore => prevScore + 1);
     } else if (winner === 'cpu') {
-      setCpuScore(cpuScore + 1);
+      setCpuScore(prevScore => prevScore + 1);
     }
 
-    // Update game history
-    const newHistory = {
-      userChoice,
-      cpuChoice,
-      winner,
-    };
-    setGameHistory([...gameHistory, newHistory]);
+    // O'yin tarixini saqlash
+    const resultText = `User chose ${choice}, CPU chose ${cpuChoice}. ${winner === 'draw' ? "It's a draw!" : `Winner: ${winner}`}`;
+    setGameHistory(prevHistory => [...prevHistory, resultText]);
+  };
+  const generateComputerChoice = () => {
+    const choices = ['rock', 'paper', 'scissors'];
+    const randomIndex = Math.floor(Math.random() * choices.length);
+    return choices[randomIndex];
+  };
+
+  // G'olibni aniqlash uchun funksiya
+  const determineWinner = (userChoice, cpuChoice) => {
+    if (userChoice === cpuChoice) {
+      return 'draw';
+    } else if (
+      (userChoice === 'rock' && cpuChoice === 'scissors') ||
+      (userChoice === 'paper' && cpuChoice === 'rock') ||
+      (userChoice === 'scissors' && cpuChoice === 'paper')
+    ) {
+      return 'user';
+    } else {
+      return 'cpu';
+    }
   };
 
   return (
-    <div id="game-screen">
-      {/* Conditional rendering based on showGame state */}
-      {showGame ? (
-        <div>
-          {/* Game UI */}
-          {/* Display user and CPU scores */}
-          <div id="score-tally">
-            <p id="score">{userName}: {userScore} v CPU: {cpuScore}</p>
-          </div>
-          {/* Game logic components */}
-          {/* User choice selection */}
+    <div id ="game-screen">
+      <div id="score-tally">
+        <p id="score"> {userName}: {userScore} v CPU: {cpuScore}</p>
+      </div>
+
+      <form id="game-form">
+        <div className="form-group">
+          <label htmlFor="user-selection">Select your choice: </label>
           <select
             className="custom-select"
             id="user-selection"
             name="user-selection"
-            onChange={(e) => handleUserChoice(e.target.value)}
+            value={userChoice || ''}
+            onChange={(e) => setUserChoice(e.target.value)}
           >
-            <option value="rock">Rock</option>
-            <option value="paper">Paper</option>
-            <option value="scissors">Scissors</option>
+            <option id="rock" value="rock">
+              Rock
+            </option>
+            <option id="paper" value="paper">
+              Paper
+            </option>
+            <option id="scissors" value="scissors">
+              Scissors
+            </option>
           </select>
-          {/* Go button */}
-          <button className="btn btn-primary" id="play-button" type="button" onClick={handleGoClick}>
-            Go
-          </button>
         </div>
-      ) : (
-        // Welcome screen UI
-        <div>
-          {/* WelcomeView component */}
-          {/* Pass setShowGame as prop to update showGame state */}
-          <WelcomeView setShowGame={setShowGame} />
-        </div>
-      )}
+        <button className="btn btn-primary" id="play-button" type="button"  onClick={()=>userChooses(userChoice)}>
+          Play
+        </button>
+        <button className="btn btn-primary" id="play-button" type="button"  onClick={()=>{setUserScore(0), setCpuScore(0), setGameHistory([])}}>
+          Reset
+        </button>
+      </form>
+      <h2 className="history-title">Game History</h2>
+      <ol>
+        {gameHistory.map((result, index) => (
+          <li key={index}>{result}</li>
+        ))}
+      </ol>
     </div>
   );
 };
