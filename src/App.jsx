@@ -1,24 +1,26 @@
-// src/App.jsx
 import {useState} from 'react';
 
 import WelcomeView from './components/WelcomeView';
 import GameView from './components/GameView';
 import "./App.css"
+import { Route, Routes } from 'react-router-dom';
 function App() {
   const [userName, setUserName] = useState("");
 
   return (
     <div className="container">
-      
-      <WelcomeView userName={userName} setUserName={setUserName} />
-      <GameView userName={userName} />
-    
+      <div className="card">
+           <Routes>
+           <Route path="/8-react-rps-makhsudjonaminov/" element={<WelcomeView userName={userName} setUserName={setUserName} />} />
+           <Route path="/play" element={<GameView userName={userName} />} />
+      </Routes>
+      </div>
+     
+   
     </div>
   );
 }
 export default App
-
-
 
 // // src/App.jsx
 // import React, { useState } from 'react';

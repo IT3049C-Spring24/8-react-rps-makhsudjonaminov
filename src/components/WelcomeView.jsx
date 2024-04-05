@@ -1,11 +1,15 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const WelcomeView = ({userName, setUserName}) => {
   return (
     <div id="welcome-screen">
+      <h2 className="title">Welcome</h2>
+      <h2 className="title">To RPS game</h2>
+
       <form id="name-form">
         <div className="form-group">
-          <label htmlFor="username">Type your name: </label>
+          <label className="name" htmlFor="username">Type your name: </label>
           <input
             value={userName}
             onChange={(e) => {setUserName(e.target.value)}}
@@ -16,9 +20,10 @@ const WelcomeView = ({userName, setUserName}) => {
             required placeholder="Enter Name Here..." minLength="2"
             maxLength="15" />
         </div>
-        <button className="btn btn-primary" id="start-game-button" type="button">
-          Start Game!
-        </button>
+        <Link to="/play" className="btn btn-primary gbtn" id="start-game-button" type="button">
+           Play Game    
+        </Link>
+      
       </form>
     </div>
   );

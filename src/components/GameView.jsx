@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const GameView = ({userName}) => {
-  const [userChoice, setUserChoice] = useState(null);
+  const [userChoice, setUserChoice] = useState('rock');
   const [userScore, setUserScore] = useState(0);
   const [cpuScore, setCpuScore] = useState(0);
   const [gameHistory, setGameHistory] = useState([]);
@@ -41,14 +42,14 @@ const GameView = ({userName}) => {
   };
 
   return (
-    <div id ="game-screen">
+    <div id="game-screen">
       <div id="score-tally">
-        <p id="score"> {userName}: {userScore} v CPU: {cpuScore}</p>
+        <p id="score" className="title"> {userName}: {userScore} v CPU: {cpuScore}</p>
       </div>
 
       <form id="game-form">
         <div className="form-group">
-          <label htmlFor="user-selection">Select your choice: </label>
+          <label htmlFor="user-selection" className="title">Select your choice: </label>
           <select
             className="custom-select"
             id="user-selection"
@@ -67,17 +68,25 @@ const GameView = ({userName}) => {
             </option>
           </select>
         </div>
-        <button className="btn btn-primary" id="play-button" type="button"  onClick={()=>userChooses(userChoice)}>
-          Play
-        </button>
-        <button className="btn btn-primary" id="play-button" type="button"  onClick={()=>{setUserScore(0), setCpuScore(0), setGameHistory([])}}>
+        <div className="game-btns">
+          <button className="btn btn-primary game-btn" id="play-button" type="button"  onClick={()=>userChooses(userChoice)}>
+            Play
+          </button>
+        <Link to="/8-react-rps-makhsudjonaminov/" className="btn btn-primary gbtn" id="play-button" type="button"  
+            onClick={()=>{
+              setUserScore(0),
+              setCpuScore(0),
+              setGameHistory([])
+            }}>
           Reset
-        </button>
+        </Link>
+        </div>
+      
       </form>
-      <h2 className="history-title">Game History</h2>
-      <ol>
+      <h2 className="title">Game History</h2>
+      <ol className="history-list">
         {gameHistory.map((result, index) => (
-          <li key={index}>{result}</li>
+          <li key={index} className="title">{result}</li>
         ))}
       </ol>
     </div>
